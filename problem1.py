@@ -1,7 +1,7 @@
 # read the two arrays from puzzle1.dat
 list1 = []
 list2 = []
-with open('puzzle1.dat', 'r') as puzzle1_file:
+with open('puzzle1_prob.dat', 'r') as puzzle1_file:
     for line in puzzle1_file:
         nums = line.strip().split()
         list1.append(int(nums[0]))

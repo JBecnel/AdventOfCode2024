@@ -1,12 +1,12 @@
 import numpy as np
 
 # read each column
-list1 = np.loadtxt('puzzle1.dat', delimiter=" ", usecols=0, dtype=int) 
+list1 = np.loadtxt('puzzle1_prob.dat', delimiter=" ", usecols=0, dtype=int) 
 
 
 #print(list1)
 
-list2 = np.loadtxt('puzzle1.dat', usecols=1, dtype=int) 
+list2 = np.loadtxt('puzzle1_prob.dat', usecols=1, dtype=int) 
 #print(list2)
 
 # find the frequency of each element in column 1
