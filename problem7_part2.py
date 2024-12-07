@@ -1,3 +1,47 @@
+# concatenate two numbers
+def numConcat(num1, num2):
+     # find number of digits in num2
+     digits = len(str(num2))
+     # add zeroes to the end of num1
+     num1 = num1 * (10**digits)
+     # add num2 to num1
+     num1 += num2
+     return num1
+ 
+
+# the following returns the teranary 
+# sequence representing an integer with the 
+# given number of digits
+def create_operation_sequence(number, num_digits):
+    seq = [0] * num_digits
+    index = 1
+    while number > 0:
+        seq[-index] = number % 3
+        number = number // 3
+        index += 1
+    
+    return seq
+
+# performs the operations on the given number and returns the result
+# returns True if we hit the target
+# we should have 1 move number than operation
+def perform_operation(nums, ops, target):
+    total = nums[0]
+    for op_index in range(len(op_seq)):
+        num2 = nums[op_index+1]  # next number
+        if ops[op_index] == 0:
+            total *= num2
+        elif op_seq[op_index] == 1:
+            total += num2
+        else: # concatenation of numbers
+            total = numConcat(total, num2)
+            
+        if (total > target):
+            return False
+    
+    return (total == target)
+            
+
 # read the file puzzle7_samples a dat one line at a time
 file_name = 'puzzle7_sample.dat'
 file_name = 'puzzle7.dat'
@@ -14,40 +58,32 @@ with open(file_name, 'r') as puzzle_file:
 
 result_set = set()
 for k in range(len(result)):
+    # the total number of operations is one fewer than the numbers
     num_operations = len(num_list[k])-1
-    # for each ternary number  from 0 to 3^(n-1)-1
-    # calculate the result of the numbers 
+    # we use ternary   from 0 to 3^(num_ops)-1
+    # to traverse all possible operation combination
     # the three legal operations are multiplication, concatenation, and addition
     total_combination = pow(3,num_operations) 
     operation = 0
-    while operation < total_combination:
+    result_found = False
+    while (operation < total_combination) and (not result_found):
+        op_seq = create_operation_sequence(operation, num_operations)
+        #print(operation, op_seq)
+
         # perform the operations indication by the ternary representation
         # of tne number operation with
         # 0 - multiplication
         # 1 - addition
-        # 2 - concatenation 
-        op = operation
-        total = num_list[k][0] # start with the first number
-        num_index = 1
-        operation = operation + 1
-        # continue until we process all operations or go over the result
-        while (num_index < len(num_list[k])) and (total < result[k]):
-            current_op = op % 3
-            op = op // 3
-            if current_op == 0:
-                total *= num_list[k][num_index]
-            elif current_op == 1:
-                total += num_list[k][num_index]
-            else:
-                # concatenation
-                #print("concat")
-                num_index = num_index+1-1 # move ahead one more because we used two number
+        # 2 - concatenation
+        # perform the operations on the sequence of numbers (staying under the result)
+        result_found = perform_operation(num_list[k], op_seq, result[k])
 
-            num_index = num_index +1
-        
-        if (total == result[k]):
+            
+        if (result_found):
             result_set.add(result[k])
-            #print(num_list[k], result[k])
+            #print(num_list[k], result[k], op_seq)
+
+        operation = operation + 1 
 
 # total up the result set
 sum = 0
