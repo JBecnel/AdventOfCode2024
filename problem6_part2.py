@@ -28,18 +28,19 @@ directions = [(-1,0), (0,1), (1,0), (0,-1)]
 # max row and max column
 max_row = len(grid) - 1
 max_col = len(grid[0]) -1
-count = 0  # count of the number loops
+
 
 #############################################################
 # find the path from problem 1
 #############################################################
 original_path = set()
+# set starting location and direction
 r = carrot_r
 c = carrot_c 
 direction = 0
 dr, dc = directions[direction]
 while (r <= max_row) and (r >= 0) and (c <= max_col) and (c >= 0):
-    # check if we've reached a tree or a carrot
+    # check if we've reached a dead end 
     if grid[r][c] == '#':
         direction = (direction + 1) % 4
         # retreat to previous location
@@ -59,7 +60,7 @@ print(len(original_path))
 # and determine if you run into a cycle
 ##########################################################
 ##########################################################
-
+count = 0 # counts number of loops
 # for each possible destination along the original path
 for location in original_path:
     row = location[0]
@@ -74,7 +75,7 @@ for location in original_path:
         dr, dc = directions[direction]
         # while we are on the grid
         while (r <= max_row) and (r >= 0) and (c <= max_col) and (c >= 0):
-            # check if we've reached a tree or the obstruction location
+            # check if we've reached a dead end or the obstruction location
             if grid[r][c] == '#' or (r == row and c == col): 
                 # retreat to previous location and turn
                 r = r - dr 
@@ -98,5 +99,5 @@ for location in original_path:
         # end while
         
    
-# move in the current direction
+
 print(count)
