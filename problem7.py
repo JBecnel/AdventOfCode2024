@@ -14,11 +14,10 @@ with open(file_name, 'r') as puzzle_file:
 
 result_set = set()
 for k in range(len(result)):
-    # for k from 0 to 2^n-1
     num_operations = len(num_list[k])-1
     # for each binary number  from 0 to 2^(n-1)-1
-    # calculate the sum of the numbers in num_list[i] that correspond to the binary digits in i
-    # and append the sum to the result list if the sum is equal to the result[i]
+    # calculate the result of the numbers in num_list[i] where
+    # either multiplication or addition can be used
     for i in range(1 << num_operations):
         total = num_list[k][0] 
         for j in range(1, num_operations+1):  # j traverses the number of bits in i
