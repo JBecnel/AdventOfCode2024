@@ -1,8 +1,7 @@
 file_path = 'puzzle9_sample.dat'
-file_path = 'puzzle9_sample2.dat'
-#file_path = 'puzzle9.dat'
+file_path = 'puzzle9.dat'
 
-dBug = True  # used to print debugging statemetns
+dBug = False  # used to print debugging statemetns
 
 with open(file_path, 'r') as file:
      # Read one line and strip whitespace and newlines
@@ -42,7 +41,7 @@ def move_block(disk_map, free_space, stop):
         if block_size <= free_space and not moved:            
             disk_map[id][2] = True  # indicate the block has been moved
             return [id, block_size]
-    return [-1,0]   # flag for can't find a phone
+    return [-1,0]   # flag for can't find a open spot
 
 pos = 0 # position in file
 check_sum = 0 # check sum in problem id * file  position
@@ -50,10 +49,11 @@ for id in range(len(disk_map)):
     # find the check sum for the block of memory
     block = disk_map[id][0]
     moved = disk_map[id][2]
-    if moved: 
+    if moved: # if the block is moved skip ahead and take care of free space
         pos = pos + block 
     else: 
-        # compute the check sum for the block compenent
+        # if the block hasn't been moved
+        # compute the check sum for the block
         while block > 0:
             check_sum = check_sum + pos*id # check_sum for used space
             if dBug:
@@ -61,30 +61,30 @@ for id in range(len(disk_map)):
             pos = pos + 1
             block = block - 1        
         
-        # move the file to the free spot and compute the check sum
-        free = disk_map[id][1]
+    # fill the free space after the block
+    free = disk_map[id][1]
+    if dBug:
         print(disk_map)
-        new_block_id = 0
-        if disk_map[id][0] == 0:
-            print("position ", pos, " nothing ", 0)
-            pos = pos + 1
-
-        while free > 0 and new_block_id != -1:
-            new_block_id, blocks_used  = move_block(disk_map, free, id)    
-            if new_block_id == -1:
-                pos = pos + free    
-            free = free - blocks_used
+    new_block_id = 0
+    
+    while free > 0 and new_block_id != -1:
+        new_block_id, blocks_used  = move_block(disk_map, free, id) 
+        # if there is nothing that fits in the free space, jump ahead   
+        if new_block_id == -1:
+            pos = pos + free    
+        free = free - blocks_used
+        if dBug:
+            print("before id ", id, "pos ", pos, "block ", block, "block_used", blocks_used , "free space ", free, "inserted block ", new_block_id, "check sum ", check_sum)
+        # for all the blocks used in the free space compute the check sum
+        while blocks_used > 0:
+            check_sum = check_sum + pos*new_block_id
             if dBug:
-                print("before id ", id, "pos ", pos, "block ", block, "block_used", blocks_used , "free space ", free, "inserted block ", new_block_id, "check sum ", check_sum)
-            while blocks_used > 0:
-                check_sum = check_sum + pos*new_block_id
-                if dBug:
-                    print("id ", id, "pos ", pos, "block ", block, "free space ", free, "inserted block ", new_block_id, "check sum ", check_sum)
-                pos = pos + 1
-                blocks_used = blocks_used - 1
+                print("id ", id, "pos ", pos, "block ", block, "free space ", free, "inserted block ", new_block_id, "check sum ", check_sum)
+            pos = pos + 1
+            blocks_used = blocks_used - 1
 
 print()
-print(check_sum)
+print(check_sum) # display the solution
 
 # answer to test problem
 if dBug:
@@ -98,11 +98,3 @@ if dBug:
             total = total + index * int(str[index])
             print(total)
     print(total)
-
-
-
-
-
-
-
-
