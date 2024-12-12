@@ -3,8 +3,8 @@ dBug = True
 # read the contents of the file line by line
 #file_path = 'puzzle10_sample5.dat'
 def main():
-    file_path = "puzzle12_sample2.dat"
-    file_path = 'puzzle12.dat'
+    file_path = "puzzle12_sample3.dat"
+    #file_path = 'puzzle12.dat'
     with open(file_path, 'r') as file:
         lines = file.readlines()
     lines = [line.strip() for line in lines]
@@ -63,8 +63,7 @@ def find_all_plots(plant, locations, loc_G):
             fill_plot(plot, plant, location, loc_G, visited)
             plots.append(plot)
 
-    if dBug:
-        print("plants ", plant, "plots ", plots)
+    
 
     return plots 
 
@@ -74,21 +73,51 @@ def compute_price(plant, locations, loc_G):
     plots = find_all_plots(plant, locations, loc_G)
     price = 0
     for plot in plots:
-        perimeter = 0
-        # up down left right directions
+        sides = 0
+        # left, right, up, down
         directions = [(0,-1), (0,1), (-1,0), (1,0)]
+        row_visited = set()
+        col_visited = set()
         for location in plot:
-            for dir in directions:
+            for i in range(len(directions)):
+                dir = directions[i]
                 row = location[0] + dir[0]
                 col = location[1] + dir[1]
                 
-                if (row, col) in loc_G:
-                    if loc_G[row, col] != plant:
-                        perimeter = perimeter + 1
-                else:
-                    perimeter = perimeter + 1 
+                if dBug:
+                    print("plant ", plant, "location ", location, "r/c", (row, col), "side ", sides)
+
+                if (i >=2):  # up/down
+                    if (row, col) in loc_G:
+                        if loc_G[row, col] != plant:
+                            if row not in row_visited:
+                                row_visited.add(row)
+                                sides = sides + 1 
+                        
+                    else:
+                        if row not in row_visited:
+                            row_visited.add(row)
+                            sides = sides + 1 
+                else: 
+                    if (row, col) in loc_G:
+                        if loc_G[row, col] != plant:
+                            if col not in col_visited:
+                                col_visited.add(col)
+                                sides = sides + 1 
+                        
+                    else:
+                        if col not in col_visited:
+                            col_visited.add(col)
+                            sides = sides + 1 
+
+                if dBug:
+                    print("side " , sides)
+
+                    
+        if dBug:
+          print("plant ", plant, "plots ", plot, "sides ", sides)    
         
-        price = price + perimeter * len(plot)
+        price = price + sides * len(plot)
     return price
     
 
