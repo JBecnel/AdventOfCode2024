@@ -55,8 +55,9 @@ def fill_plot(plot, plant, location, loc_G, visited):
 def find_all_plots(plant, locations, loc_G):
     plots = []
     visited = set()
-    plot = []
+    
     for location in locations:
+        plot = []
         if location not in visited:
             plot = fill_plot(plot, plant, location, loc_G, visited)
             plots.append(plot)
