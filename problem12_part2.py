@@ -52,7 +52,11 @@ def fill_plot(plot, plant, location, loc_G, visited):
 
     #return plot 
     
-
+# finds all the seperate plots 
+# holding the given plant
+# and all the locations the plant occurs
+# a list of sets with each set being a separate plot
+# is returns
 def find_all_plots(plant, locations, loc_G):
     plots = []
     visited = set()
@@ -63,11 +67,11 @@ def find_all_plots(plant, locations, loc_G):
             fill_plot(plot, plant, location, loc_G, visited)
             plots.append(plot)
 
-    
-
     return plots 
 
-
+# This method counts the number of fence sides
+# we check if each potential square is a new possible
+# left, up, down, or right side
 def find_sides(plot, plant, loc_G):
     # left, right, up, down
     sides = 0
@@ -107,21 +111,18 @@ def find_sides(plot, plant, loc_G):
     return sides            
 
 def compute_price(plant, locations, loc_G):
-    
+    # find all the plots holding the given plant     
     plots = find_all_plots(plant, locations, loc_G)
 
     if dBug:
         print("plant", plant, "plots", plots)
+
     price = 0
     for plot in plots:
+        # find the number of sides for the given plot
         sides = find_sides(plot, plant, loc_G)
-        # left, right, up, down
-     
 
-                    
-        if dBug:
-          print("plant ", plant, "plot ", plot, "sides ", sides)    
-        
+        # increment the fence price
         price = price + sides * len(plot)
     return price
     
