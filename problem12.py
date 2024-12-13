@@ -1,4 +1,4 @@
-dBug = True
+dBug = False
 
 # read the contents of the file line by line
 #file_path = 'puzzle10_sample5.dat'
@@ -9,6 +9,9 @@ def main():
         lines = file.readlines()
     lines = [line.strip() for line in lines]
 
+    # create the plant and location graphs
+    # key is plant, values is a list of locations
+    # key is location, values is the plant
     plant_graph, location_graph = create_graphs(lines)
     
     if dBug: 
@@ -17,6 +20,7 @@ def main():
         print("location graph")
         print(location_graph)
 
+    # find the price of the fences
     print(fence_price(plant_graph, location_graph))
 
 def create_graphs(plot):
@@ -36,6 +40,9 @@ def create_graphs(plot):
     return graph, inverse
 
 
+# This helper functions finds
+# a connected plot containing the given
+# plant and the given starting location
 def fill_plot(plot, plant, location, loc_G, visited):
     plot.append(location)
     visited.add(location)
@@ -50,11 +57,12 @@ def fill_plot(plot, plant, location, loc_G, visited):
                     if loc_G[row, col] == plant:
                         fill_plot(plot, plant,(row, col), loc_G, visited)
 
-    #return plot 
     
-
+    
+# Find all plots that contain the given plant
 def find_all_plots(plant, locations, loc_G):
-    plots = []
+    
+    plots = []  # lists (of lists) of the various plots containing the given plant
     visited = set()
     
     for location in locations:
@@ -68,7 +76,7 @@ def find_all_plots(plant, locations, loc_G):
 
     return plots 
 
-
+# Compute the price of the fence given the information
 def compute_price(plant, locations, loc_G):
     
     plots = find_all_plots(plant, locations, loc_G)
@@ -87,7 +95,7 @@ def compute_price(plant, locations, loc_G):
                         perimeter = perimeter + 1
                 else:
                     perimeter = perimeter + 1 
-        
+        # len(plot) is the area
         price = price + perimeter * len(plot)
     return price
     

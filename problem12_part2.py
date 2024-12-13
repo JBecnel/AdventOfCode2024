@@ -1,10 +1,10 @@
-dBug = True
+dBug = False
 
 # read the contents of the file line by line
 #file_path = 'puzzle10_sample5.dat'
 def main():
-    file_path = "puzzle12_sample3.dat"
-    #file_path = 'puzzle12.dat'
+    file_path = "puzzle12_sample2.dat"
+    file_path = 'puzzle12.dat'
     with open(file_path, 'r') as file:
         lines = file.readlines()
     lines = [line.strip() for line in lines]
@@ -37,7 +37,7 @@ def create_graphs(plot):
 
 
 def fill_plot(plot, plant, location, loc_G, visited):
-    plot.append(location)
+    plot.add(location)
     visited.add(location)
 
     # up down left right directions
@@ -58,7 +58,7 @@ def find_all_plots(plant, locations, loc_G):
     visited = set()
     
     for location in locations:
-        plot = []
+        plot = set()
         if location not in visited:
             fill_plot(plot, plant, location, loc_G, visited)
             plots.append(plot)
@@ -68,54 +68,59 @@ def find_all_plots(plant, locations, loc_G):
     return plots 
 
 
+def find_sides(plot, plant, loc_G):
+    # left, right, up, down
+    sides = 0
+    for square in plot:
+        # left, right, up, down
+        up = (square[0] -1, square[1])
+        down = (square[0]+1, square[1])
+        left = (square[0], square[1]-1)
+        right = (square[0], square[1]+1)
+        up_left = (square[0]-1, square[1]-1)
+        up_right = (square[0]-1, square[1]+1)
+        down_left = (square[0]+1, square[1]-1)
+        if left not in plot: # potential new left, check above
+            if up not in plot: 
+                sides = sides + 1
+            elif up_left  in plot:
+                sides = sides + 1
+
+        if right not in plot: # potential new right, check above
+            if up not in plot:
+                sides = sides + 1
+            elif up_right  in plot:
+                sides = sides + 1
+        
+        if up not in plot: # potential new up, check above and left
+            if left not in plot:
+                sides = sides + 1
+            elif up_left  in plot:
+                sides = sides + 1
+        
+        if down not in plot: # potential new down, check below and right
+            if left not in plot:
+                sides = sides + 1
+            elif down_left in plot:
+                sides = sides + 1
+
+    return sides            
+
 def compute_price(plant, locations, loc_G):
     
     plots = find_all_plots(plant, locations, loc_G)
+
+    if dBug:
+        print("plant", plant, "plots", plots)
     price = 0
     for plot in plots:
-        sides = 0
+        sides = find_sides(plot, plant, loc_G)
         # left, right, up, down
-        directions = [(0,-1), (0,1), (-1,0), (1,0)]
-        row_visited = set()
-        col_visited = set()
-        for location in plot:
-            for i in range(len(directions)):
-                dir = directions[i]
-                row = location[0] + dir[0]
-                col = location[1] + dir[1]
-                
-                if dBug:
-                    print("plant ", plant, "location ", location, "r/c", (row, col), "side ", sides)
-
-                if (i >=2):  # up/down
-                    if (row, col) in loc_G:
-                        if loc_G[row, col] != plant:
-                            if row not in row_visited:
-                                row_visited.add(row)
-                                sides = sides + 1 
-                        
-                    else:
-                        if row not in row_visited:
-                            row_visited.add(row)
-                            sides = sides + 1 
-                else: 
-                    if (row, col) in loc_G:
-                        if loc_G[row, col] != plant:
-                            if col not in col_visited:
-                                col_visited.add(col)
-                                sides = sides + 1 
-                        
-                    else:
-                        if col not in col_visited:
-                            col_visited.add(col)
-                            sides = sides + 1 
-
-                if dBug:
-                    print("side " , sides)
+     
 
                     
         if dBug:
-          print("plant ", plant, "plots ", plot, "sides ", sides)    
+          print("plant ", plant, "plot ", plot, "sides ", sides)    
         
         price = price + sides * len(plot)
     return price
