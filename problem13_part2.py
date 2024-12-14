@@ -2,7 +2,7 @@ import numpy as np
 import re 
 def parse_input():
     # Read the input file
-    file_path = "puzzle13_sample1.dat"
+    file_path = "puzzle13_sample.dat"
     file_path = "puzzle13.dat"
     with open(file_path, 'r') as file:
         lines = file.readlines()
