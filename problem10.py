@@ -7,7 +7,7 @@ with open(file_path, 'r') as file:
 lines = [line.strip() for line in lines]
 
 
-# create the graph using dictionarys
+# create the graph using dictionary
 graph = { }   # key is elevation, values is a list of locations
 inverse = { } # key is location, values is the elevations
 for r in range(len(lines)):

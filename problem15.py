@@ -11,7 +11,7 @@ def obtain_input(filename):
     walls = set()   # set of all wall locations
     moves = []      # list of all moves to make in order
 
-    # using image coordindates (0,0) is top left
+    # using image coordinates (0,0) is top left
     # x moves left and right
     # y moves up and down
     # '^' is up, '>' is right, '<' is left, 'v' is down
