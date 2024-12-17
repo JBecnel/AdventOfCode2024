@@ -20,6 +20,10 @@ def read_puzzle_input(filename):
     
     return registers, program
 
+# applies the op code to the operand and updates the
+# values in registers
+# instruction location
+# output of program
 def process_instruction(opcode, operand, registers, instruction, output):
     combo_op = get_combo_operand(operand, registers)
     if opcode == 0:
@@ -84,15 +88,42 @@ def base_8(program):
         place = place * 8
     return num
 
+
+def run_program(registers, program, value):
+    output = []
+
+    registers['A'] = value
+    registers['B'] = 0
+    registers['C'] = 0
+
+    instruction_index = 0
+    while instruction_index < len(range(len(program))):
+        opcode = program[instruction_index]
+        operand = program[instruction_index + 1]
+    
+        
+        instruction_index =  process_instruction(opcode, operand, registers, instruction_index, output)
+
+        if len(output) > 0:
+            if output != program[0:len(output)]:
+                return []
+
+    return output
+    
+
 def main():
     # Read the input file
-    #file_name = 'puzzle17_sample1.dat'
+    file_name = 'puzzle17_sample1.dat'
     file_name = 'puzzle17.dat'
     registers, program = read_puzzle_input(file_name)
 
-    
+      # on viewing the debug file, we realize
+    # that we are printing in the numbers in base 8, 
+    # so we need the number in base 8
+    # that matches the program input
 
     # interpret the program as a number in base 8
+    # puzzle solution can be any of num, num+1, ...., num+7
     num = base_8(program)
     print(num)
 
@@ -100,51 +131,32 @@ def main():
         debug_file = open('debug.txt', 'w')
         print(registers, file=debug_file)
         print(program, file=debug_file)
+        print(len(program), file=debug_file)
     
    
-        # on viewing the debug file, we realize
-        # that we are printing in the numbers in base 8, 
-        # so we need the number in base 8
-        # that matches the program input
-        output = []
-        reg_A = 0
-        while output != program:
-            output = []
-
-            registers['A'] = reg_A
-            registers['B'] = 0
-            registers['C'] = 0
-
-            instruction_index = 0
-            while instruction_index < len(range(len(program))):
-                opcode = program[instruction_index]
-                operand = program[instruction_index + 1]
-                # if dBug:
-                #     print("pointer ", instruction_index)
-                #     print("opcode ", opcode)
-                #     print("operand : ", operand)
-                
-                instruction_index =  process_instruction(opcode, operand, registers, instruction_index, output)
-                # if dBug:
-                #     print( )            
-                #     print(registers)
-                #     print(output)
-                #     print()
-
-            if dBug:
-                print("A", reg_A, file=debug_file)
-                print("output", output, file=debug_file)
-
-            
-            reg_A = reg_A + 1
-                    
+    # find the one that gives us the output
+    output = []
     
 
+    for reg_A in range(pow(8,len(program)), pow(8, len(program)+1) ):
+    #for reg_A in range(num, num+1):
+        value = reg_A    
+        #if dBug:
+           #value = pow(8, reg_A)
 
-        # Convert output list to comma-separated string
-        result = ','.join(str(x) for x in output)
-        print(result)
-        print(reg_A)
+        output = run_program(registers,program, value)
+        if dBug and len(output) > 0:
+            print("A", reg_A, file=debug_file)
+            print("output", output, file=debug_file)
+
+        
+        if output == program:
+            print(reg_A)
+                
+
+
+
+    
 
 
 

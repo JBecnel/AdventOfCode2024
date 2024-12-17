@@ -81,7 +81,7 @@ def get_combo_operand(operand, registers):
 def main():
     # Read the input file
     file_name = 'puzzle17_sample1.dat'
-    #file_name = 'puzzle17.dat'
+    file_name = 'puzzle17.dat'
     registers, program = read_puzzle_input(file_name)
 
     debug_file = open('debug.txt', 'w')
@@ -112,14 +112,6 @@ def main():
     # Convert output list to comma-separated string
     result = ','.join(str(x) for x in output)
     print(result)
-
-
-
-
-
-
-
-
 
 
 if __name__ == "__main__":
