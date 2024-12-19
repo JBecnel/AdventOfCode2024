@@ -79,7 +79,7 @@ def main():
 
     if dBug:
         print("bytes " , bytes)
-    #perform a bfs
+    #perform a bfs (using a binary search would be more efficient)
     #WIDTH = 7
     #HEIGHT = 7
     for num_bytes in range(1025, file_length):
