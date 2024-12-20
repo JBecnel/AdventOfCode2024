@@ -2,7 +2,7 @@ import networkx as nx
 from enum import Enum
 from collections import deque
 
-dBug = False
+dBug = True
 
 
 class Direction(Enum):
@@ -54,7 +54,7 @@ def build_graph(path):
 
 def main():
     file_name = "puzzle20_sample.dat"
-    file_name = "puzzle20.dat"
+    #file_name = "puzzle20.dat"
     start, end, path, width, height = obtain_input(file_name)
     graph = build_graph(path)
     result = nx.shortest_path(graph, (start[0], start[1]), (end[0], end[1]))
