@@ -52,6 +52,21 @@ def build_graph(path):
     return G
 
 
+def find_path(graph, start, end):
+    path = [start]
+    current = start
+    visited = set()
+    visited.add(start)
+    while not end in visited:
+        for d in Direction:
+            x = current[0] + d.value[0]
+            y = current[1] + d.value[1]
+            if (x,y) in graph and not (x,y) in visited:
+                path.append((x,y))
+                visited.add((x,y))
+                current = (x,y)
+    return path 
+
 def main():
     #file_name = "puzzle20_sample.dat"
     file_name = "puzzle20.dat"
@@ -60,10 +75,12 @@ def main():
     # This is overkill, it can easily be figured out b/c there is only one path
     # from start to finish
     # build a graph find the race track start to finish path
-    graph = build_graph(path)    
-    start_finish = nx.shortest_path(graph, start, end)
+    #graph = build_graph(path)    
+    #start_finish = nx.shortest_path(graph, start, end)
+
+    start_finish = find_path(path, start, end)
     
-    # the lenght of race_track is the default time it takes
+    # the length of race_track is the default time it takes
     default_time = len(start_finish)
 
     pico =  20
@@ -75,11 +92,10 @@ def main():
             p = start_finish[i]
             q = start_finish[j]
             if abs(p[0]-q[0]) + abs(p[1]-q[1]) <= pico:
-                travesal_time = i + (default_time - j) + abs(p[0]-q[0]) + abs(p[1]-q[1])
-                short_cut[(i,j)] =  default_time - travesal_time
+                traversal_time = i + (default_time - j) + abs(p[0]-q[0]) + abs(p[1]-q[1])
+                short_cut[(i,j)] =  default_time - traversal_time
 
     # find how many times each traversal time occurs
-    score = { }
     count = 0
     for key, val in short_cut.items():
         if val >= 100:      
