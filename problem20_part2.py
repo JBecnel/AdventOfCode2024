@@ -57,6 +57,8 @@ def main():
     file_name = "puzzle20.dat"
     start, end, path, walls, width, height = obtain_input(file_name)
     
+    # This is overkill, it can easily be figured out b/c there is only one path
+    # from start to finish
     # build a graph find the race track start to finish path
     graph = build_graph(path)    
     start_finish = nx.shortest_path(graph, start, end)
@@ -65,11 +67,7 @@ def main():
     default_time = len(start_finish)
 
     pico =  20
-    # reverse lookup = pick location, find index (number of seconds to get to)
-    location_on_path = { }
-    for i in range(0, len(start_finish)):    
-        location_on_path[start_finish[i]] = i
-
+  
     # find the time of traversal for each short cut
     short_cut= { }
     for i in range(0, len(start_finish)):
@@ -77,25 +75,19 @@ def main():
             p = start_finish[i]
             q = start_finish[j]
             if abs(p[0]-q[0]) + abs(p[1]-q[1]) <= pico:
-                travesal_time = location_on_path[p] + (len(location_on_path) - location_on_path[q]) + abs(p[0]-q[0]) + abs(p[1]-q[1])
+                travesal_time = i + (default_time - j) + abs(p[0]-q[0]) + abs(p[1]-q[1])
                 short_cut[(i,j)] =  default_time - travesal_time
 
     # find how many times each traversal time occurs
     score = { }
+    count = 0
     for key, val in short_cut.items():
         if val >= 100:      
-           if val in score:
-               score[val] = score[val] + 1
-           else:
-               score[val] = 1
-    
-    # count the ones over 100
-    count = 0
-    for key, val in score.items():
-        if key >= 100:
-            count = count + val
+           count = count + 1
 
     print(count)
+    
+    
                 
 
 
