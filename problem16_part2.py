@@ -24,7 +24,6 @@ def obtain_input(filename):
     # using image coordinates (0,0) is top left
     # x moves left and right
     # y moves up and down
-    # '^' is up, '>' is right, '<' is left, 'v' is down
     # '#' is a wall, 'O' is a box, '@' is the robot
     for y in range(len(lines)):
         for x in range(len(lines[y])):
