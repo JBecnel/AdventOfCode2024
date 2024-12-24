@@ -52,6 +52,8 @@ def find_in_operations(wire1, gate, wire2, operations):
     return None
 
 # see which need to be swapped
+# based on this image:
+# https://media.geeksforgeeks.org/wp-content/uploads/3-57.png
 def check_adders(operations, num_bits):
     bit = 1
     misfits = []
